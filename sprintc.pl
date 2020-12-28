@@ -79,8 +79,8 @@ gera_populacao(Pop):-
     populacao(TamPop),
 	vehicle_duty_id(VId),
 	lista_motoristas_nworkblocks(VId,LMotoristaWorkBlock),
-	sequencia_motoristas(LMotoristaWorkBlock,SeqMotoristas).
-	%gera_populacao(TamPop,SeqMotoristas,Pop).
+	sequencia_motoristas(LMotoristaWorkBlock,SeqMotoristas),
+	gera_populacao(TamPop,SeqMotoristas,Pop).
 
 %Gera uma sequencia de motoristas sem ordem importante, apenas para criação de individuos
 sequencia_motoristas([],[]):-!.
@@ -95,3 +95,13 @@ lista_elemento_repetido(Elemento,1,[Elemento]):-!.
 lista_elemento_repetido(Elemento,N,[Elemento|Lista]):-
     N1 is N-1,
     lista_elemento_repetido(Elemento,N1,Lista).
+
+gera_populacao(0,_,[]):-!.
+gera_populacao(TamPop,ListaMotoristas,[Ind|Resto]):-
+	TamPop1 is TamPop-1,
+	gera_populacao(TamPop1,ListaMotoristas,Resto),
+	gera_individuo(ListaMotoristas,Ind),
+	not(member(Ind,Resto)).
+
+gera_individuo(ListaMotoristas,Ind):-
+	random_permutation(ListaMotoristas,Ind).
