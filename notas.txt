@@ -1,0 +1,17 @@
+
+
+CRUZAMENTO
+
+Fazer random_permutation na lista antes de fazer os cruzamentos.
+
+Mudar para apenas 1 ponto de troca???
+
+
+
+SELECAO
+
+Torneio - juntar a geracao pai e geracao filho, e fazer random_permutation, e depois torneio de 2 em 2 parecido com o cruzamento.
+
+
+
+
