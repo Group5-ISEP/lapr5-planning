@@ -57,7 +57,6 @@ populacao(4).
 prob_cruzamento(0.4).
 prob_mutacao(0.5).
 vehicle_duty_id(12).
-tarefas(5).
 
 
 
@@ -70,6 +69,7 @@ gera:-
 	gera_geracao(0,NG,PopOrd).
 
 
+%-------------------------------------------------------
 
 %----------------------
 % GERAR POPULAÇÃO
@@ -82,7 +82,7 @@ gera_populacao(Pop):-
 	sequencia_motoristas(LMotoristaWorkBlock,SeqMotoristas),
 	gera_populacao(TamPop,SeqMotoristas,Pop).
 
-%Gera uma sequencia de motoristas sem ordem importante, apenas para criação de individuos
+%Gera uma sequencia de motoristas com base na lista de (Motorista/Num de Work blocks)
 sequencia_motoristas([],[]):-!.
 sequencia_motoristas(LMotoristaWorkBlock,ListaCompleta):-
     LMotoristaWorkBlock = [(Motorista,NWorkBlocks)|Resto],
@@ -96,6 +96,7 @@ lista_elemento_repetido(Elemento,N,[Elemento|Lista]):-
     N1 is N-1,
     lista_elemento_repetido(Elemento,N1,Lista).
 
+% Gera uma lista de individuos gerados pela permutação aleatória da sequência de motoristas
 gera_populacao(0,_,[]):-!.
 gera_populacao(TamPop,ListaMotoristas,[Ind|Resto]):-
 	TamPop1 is TamPop-1,
@@ -105,3 +106,5 @@ gera_populacao(TamPop,ListaMotoristas,[Ind|Resto]):-
 
 gera_individuo(ListaMotoristas,Ind):-
 	random_permutation(ListaMotoristas,Ind).
+
+%-------------------------------------------------------
