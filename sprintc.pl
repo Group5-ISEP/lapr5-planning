@@ -53,10 +53,29 @@ lista_motoristas_nworkblocks(12,[(276,2),(5188,3),(16690,2),(18107,6)]).
 
 % parameteriza��o
 geracoes(5).
-populacao(4).
+populacao(100).
 prob_cruzamento(0.4).
 prob_mutacao(0.5).
 vehicle_duty_id(12).
+
+% Restrições
+
+inicio_periodo_almoco(39600).
+fim_periodo_almoco(54000).
+duracao_almoco(3600).
+
+inicio_periodo_jantar(64800).
+fim_periodo_jantar(79200).
+duracao_jantar(3600).
+
+max_horas_consecutivas(14400).
+duracao_min_intervalo(3600).
+
+max_horas_diarias(28800).
+
+peso_max_horas_consecutivas(10).
+peso_max_horas_totais(10).
+peso_minimo_descanso(10).
 
 % Carregar outros ficheiros
 :- [gerar_populacao].

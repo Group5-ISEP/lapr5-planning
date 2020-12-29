@@ -6,27 +6,6 @@
 
 %-------------------------------------------------------------------------------
 
-inicio_periodo_almoco(39600).
-fim_periodo_almoco(54000).
-duracao_almoco(3600).
-
-inicio_periodo_jantar(64800).
-fim_periodo_jantar(79200).
-duracao_jantar(3600).
-
-max_horas_consecutivas(14400).
-duracao_min_intervalo(3600).
-
-max_horas_diarias(28800).
-
-peso_max_horas_consecutivas(10).
-peso_max_horas_totais(10).
-peso_minimo_descanso(10).
-
-
-
-%-------------------------------------------------------------------------------
-
 %-----------------------------NÃO PASSAR MÁXIMO HORAS CONSECUTIVAS-------------------------------
 
 restricao_nao_passar_max_horas_consecutivas([],0):-!.
