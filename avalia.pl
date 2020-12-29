@@ -14,8 +14,8 @@ avalia(SeqMotoristas,V):-
 	% Buscar a sequência de work blocks e gerar agenda temporal
 	vehicle_duty_id(Id),
 	vehicleduty(Id,SeqWorkBlocks),
-	gerar_agenda_temporal(SeqMotoristas,SeqWorkBlocks,[],Agenda).
-	%avalia_agenda(Agenda,V).
+	gerar_agenda_temporal(SeqMotoristas,SeqWorkBlocks,[],Agenda),
+	avalia_agenda(Agenda,V).
 
 %--------------------------------------------------------------------------------------------------------------------------
 %----------------------GERAR AGENDA--------------------------------------------------
@@ -80,7 +80,23 @@ concatenar_blocos_consecutivos(ListaWorkBlock,ListaWorkBlockConcatenada):-
 
 %--------------AVALIA AGENDA---------------------
 
-%//TODO: implementar
-%avalia_agenda(Agenda,V):-
+:- [constraints].
+
+% Avalia cada motorista da agenda, e soma as avaliações
+avalia_agenda([],0):-!.
+avalia_agenda(Agenda,V):-
+
+    Agenda = [ (Motorista, ListaWorkBlock) | Resto ],
+
+    % avalia a lista de workblocks do motorista
+    restricao_nao_passar_max_horas_consecutivas(ListaWorkBlock, Resultado1),
+    restricao_nao_passar_max_horas_totais(ListaWorkBlock,Resultado2),
+    Resultado is Resultado1 + Resultado2,
+
+    % avalia o resto da agenda
+    avalia_agenda(Resto, ResultadoResto),
+
+    V is Resultado + ResultadoResto.
+
 %-------------------------------------------------------
 
