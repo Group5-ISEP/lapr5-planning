@@ -148,10 +148,12 @@ gerar_agenda_temporal(SeqMotoristas,SeqWorkBlockIds,Agenda,Resultado):-
 			member((Motorista,ListaWorkBlock), Agenda),
 			% Append do workblock à lista de workblocks
 			append(ListaWorkBlock, [ (StartTime,EndTime) ], ListaWorkBlockNova),
+			% Concatena work blocks consecutivos na lista de work blocks
+			concatenar_blocos_consecutivos(ListaWorkBlockNova,ListaWorkBlockNovaConcatenada),
 			% Apaga da Agenda a entrada do motorista antiga
 			delete(Agenda,(Motorista,_),TempAgenda),
 			% Adiciona na Agenda a entrada do motorista com a lista de workblocks atualizada
-			append([(Motorista,ListaWorkBlockNova)],TempAgenda,AgendaAtualizada)
+			append([(Motorista,ListaWorkBlockNovaConcatenada)],TempAgenda,AgendaAtualizada)
 		) ; 
 		% Se o motorista ainda não tiver uma entrada na agenda, então cria uma com o workblock
 		append([ ( Motorista,[ (StartTime,EndTime) ] ) ], Agenda,AgendaAtualizada)
@@ -161,6 +163,28 @@ gerar_agenda_temporal(SeqMotoristas,SeqWorkBlockIds,Agenda,Resultado):-
 	gerar_agenda_temporal(RestoMotoristas,RestoWorkBlocks, AgendaAtualizada, Resultado).
 
 
+% Para quando tiver uma sublista com apenas um elemento (já não há mais nada para concatenar)
+concatenar_blocos_consecutivos([Bloco],[Bloco]):-!.
+concatenar_blocos_consecutivos(ListaWorkBlock,ListaWorkBlockConcatenada):-
+
+	nth1(1,ListaWorkBlock, (StartTime1,EndTime1) ),
+	nth1(2,ListaWorkBlock, (StartTime2,EndTime2) ),
+
+	% Se o Endtime do primeiro block for igual ao Starttime do segundo, então junta os dois
+	% Passa a lista de workblocks com o novo workblock recursivamente para comparar com os próximos blocos
+	(
+		EndTime1 = StartTime2,
+		% Retira os dois workblocks
+		subtract(ListaWorkBlock, [ (StartTime1,EndTime1), (StartTime2,EndTime2) ], ListaWorkBlockTemp),
+		% Adiciona o workblock concatenado
+		append( [ (StartTime1, EndTime2) ], ListaWorkBlockTemp, ListaWorkBlockNova ),
+		% Passa a lista com o novo bloco para ser concatenada com o resto dos blocos
+		concatenar_blocos_consecutivos(ListaWorkBlockNova, ListaWorkBlockConcatenada)
+	) ;
+	% Se não forem iguais, então passa uma sublista sem o primeiro workblock, e depois faz append do primeiro work block ao resultado
+	ListaWorkBlock = [ PrimeiroWorkBlock | Resto ],
+	concatenar_blocos_consecutivos(Resto, SubListaConcatenada),
+	append([PrimeiroWorkBlock], SubListaConcatenada, ListaWorkBlockConcatenada).
 
 %-----------------------------------------------
 
