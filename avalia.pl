@@ -91,7 +91,8 @@ avalia_agenda(Agenda,V):-
     % avalia a lista de workblocks do motorista
     restricao_nao_passar_max_horas_consecutivas(ListaWorkBlock, Resultado1),
     restricao_nao_passar_max_horas_totais(ListaWorkBlock,Resultado2),
-    Resultado is Resultado1 + Resultado2,
+    restricao_minimo_descanso(ListaWorkBlock,Resultado3),
+    Resultado is Resultado1 + Resultado2 + Resultado3,
 
     % avalia o resto da agenda
     avalia_agenda(Resto, ResultadoResto),
