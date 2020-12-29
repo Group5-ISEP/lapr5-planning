@@ -104,3 +104,44 @@ restricao_minimo_descanso(ListaWorkBlock,Soma,V):-
     restricao_minimo_descanso(Resto, Soma, V).
 
 %-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+
+%-----------------------------HORAS PRETENDIDAS PELO MOTORISTA-------------------------------
+
+% Para o primeiro workblock, vê se começa antes da hora pretendida e o quão antes vai determinar o valor.
+% Fazer o mesmo para o último workblock, vendo o quão depois da hora.
+
+restricao_horario_pretendido(Motorista,ListaWorkBlock,V):-
+
+    horas_pretendidas(Motorista,LimiteInf,LimiteSup),
+    
+    nth1(1,ListaWorkBlock, (StartTime, _ ) ),
+    primeiro_bloco(StartTime,LimiteInf,Valor1),
+
+    length(ListaWorkBlock, UltimoIndex),
+    nth1(UltimoIndex,ListaWorkBlock, ( _ , EndTime) ),
+    ultimo_bloco(EndTime,LimiteSup,Valor2),
+
+    V is Valor1 + Valor2.
+    
+
+primeiro_bloco(StartTime,LimiteInf,V):-
+    (
+        StartTime < LimiteInf,
+        Diferenca is LimiteInf - StartTime,
+        peso_horario_pretendido(Peso),
+        V is Diferenca * Peso
+    ) ; 
+    V is 0.
+
+ultimo_bloco(EndTime,LimiteSup,V):-
+    (
+        EndTime > LimiteSup,
+        Diferenca is EndTime - LimiteSup,
+        peso_horario_pretendido(Peso),
+        V is Diferenca * Peso
+    ) ; 
+    V is 0.
+
+%-------------------------------------------------------------------------------

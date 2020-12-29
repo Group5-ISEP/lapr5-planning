@@ -50,6 +50,13 @@ vehicleduty(12,[12,211,212,213,214,215,216,217,218,219,220,221,222]).
 lista_motoristas_nworkblocks(12,[(276,2),(5188,3),(16690,2),(18107,6)]).
 
 
+% horas_pretendidas( Motorista, LimiteInf, LimiteSup)
+horas_pretendidas(276,36000,72000).
+horas_pretendidas(5188,32400,61200).
+horas_pretendidas(16690,36000,72000).
+horas_pretendidas(18107,36000,72000).
+
+
 
 % parameteriza��o
 geracoes(5).
@@ -76,6 +83,7 @@ max_horas_diarias(28800).
 peso_max_horas_consecutivas(10).
 peso_max_horas_totais(10).
 peso_minimo_descanso(10).
+peso_horario_pretendido(1).
 
 % Carregar outros ficheiros
 :- [gerar_populacao].
