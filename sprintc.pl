@@ -64,9 +64,10 @@ gera:-
 	%inicializa,
 	gera_populacao(Pop),
 	avalia_populacao(Pop,PopAv),
-	ordena_populacao(PopAv,PopOrd),
+	%ordena_populacao(PopAv,PopOrd),
 	geracoes(NG),
-	gera_geracao(0,NG,PopOrd).
+	%gera_geracao(0,NG,PopOrd).
+	write(PopAv), nl.
 
 
 %-------------------------------------------------------
@@ -108,3 +109,60 @@ gera_individuo(ListaMotoristas,Ind):-
 	random_permutation(ListaMotoristas,Ind).
 
 %-------------------------------------------------------
+
+%----------------------
+% AVALIA
+%----------------------
+
+avalia_populacao([],[]):-!.
+avalia_populacao([Ind|Resto],[Ind*V|Resto1]):-
+	avalia(Ind,V),
+	avalia_populacao(Resto,Resto1),!.
+
+avalia(SeqMotoristas,V):-
+
+	% Buscar a sequência de work blocks e gerar agenda temporal
+	vehicle_duty_id(Id),
+	vehicleduty(Id,SeqWorkBlocks),
+	gerar_agenda_temporal(SeqMotoristas,SeqWorkBlocks,[],Agenda),
+	write(Agenda),nl.
+	%//TODO: implementar avaliacao
+
+
+%--------------GERAR AGENDA---------------------
+% Gera uma agenda no formato [ (Motorista, [ (StartTime,EndTime), ... ]), ... ]
+% Lista de tuplos, um tuplo por motorista. Cada tuplo tem o Id do motorista e a lista de workblocks, ordenada.
+
+gerar_agenda_temporal([],[],Agenda,Agenda):-!.
+
+gerar_agenda_temporal(SeqMotoristas,SeqWorkBlockIds,Agenda,Resultado):-
+
+	SeqMotoristas = [Motorista | RestoMotoristas],
+	SeqWorkBlockIds = [WorkBlockId | RestoWorkBlocks],
+	workblock(WorkBlockId,_,StartTime,EndTime),
+
+	(
+		% Se o motorista já tiver workblocks na agenda, faz append deste workblock ao final da lista de workblocks desse motorista
+		(
+			% Procura uma entrada em Agenda com Motorista, se sucesso retorna ListaWorkBlock associado a Motorista
+			member((Motorista,ListaWorkBlock), Agenda),
+			% Append do workblock à lista de workblocks
+			append(ListaWorkBlock, [ (StartTime,EndTime) ], ListaWorkBlockNova),
+			% Apaga da Agenda a entrada do motorista antiga
+			delete(Agenda,(Motorista,_),TempAgenda),
+			% Adiciona na Agenda a entrada do motorista com a lista de workblocks atualizada
+			append([(Motorista,ListaWorkBlockNova)],TempAgenda,AgendaAtualizada)
+		) ; 
+		% Se o motorista ainda não tiver uma entrada na agenda, então cria uma com o workblock
+		append([ ( Motorista,[ (StartTime,EndTime) ] ) ], Agenda,AgendaAtualizada)
+	),
+
+	% Gera a agenda para os workblocks seguintes e retorna o resultado
+	gerar_agenda_temporal(RestoMotoristas,RestoWorkBlocks, AgendaAtualizada, Resultado).
+
+
+
+%-----------------------------------------------
+
+%-------------------------------------------------------
+
