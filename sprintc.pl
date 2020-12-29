@@ -58,7 +58,9 @@ prob_cruzamento(0.4).
 prob_mutacao(0.5).
 vehicle_duty_id(12).
 
-
+% Carregar outros ficheiros
+:- [gerar_populacao].
+:- [avalia].
 
 gera:-
 	%inicializa,
@@ -68,125 +70,3 @@ gera:-
 	geracoes(NG),
 	%gera_geracao(0,NG,PopOrd).
 	write(PopAv), nl.
-
-
-%-------------------------------------------------------
-
-%----------------------
-% GERAR POPULAÇÃO
-%----------------------
-
-gera_populacao(Pop):-
-    populacao(TamPop),
-	vehicle_duty_id(VId),
-	lista_motoristas_nworkblocks(VId,LMotoristaWorkBlock),
-	sequencia_motoristas(LMotoristaWorkBlock,SeqMotoristas),
-	gera_populacao(TamPop,SeqMotoristas,Pop).
-
-%Gera uma sequencia de motoristas com base na lista de (Motorista/Num de Work blocks)
-sequencia_motoristas([],[]):-!.
-sequencia_motoristas(LMotoristaWorkBlock,ListaCompleta):-
-    LMotoristaWorkBlock = [(Motorista,NWorkBlocks)|Resto],
-    lista_elemento_repetido(Motorista,NWorkBlocks,Lista),
-    append(Lista,SubLista,ListaCompleta),
-    sequencia_motoristas(Resto,SubLista).
-
-% Gera uma lista de N Elementos iguais
-lista_elemento_repetido(Elemento,1,[Elemento]):-!.
-lista_elemento_repetido(Elemento,N,[Elemento|Lista]):-
-    N1 is N-1,
-    lista_elemento_repetido(Elemento,N1,Lista).
-
-% Gera uma lista de individuos gerados pela permutação aleatória da sequência de motoristas
-gera_populacao(0,_,[]):-!.
-gera_populacao(TamPop,ListaMotoristas,[Ind|Resto]):-
-	TamPop1 is TamPop-1,
-	gera_populacao(TamPop1,ListaMotoristas,Resto),
-	gera_individuo(ListaMotoristas,Ind),
-	not(member(Ind,Resto)).
-
-gera_individuo(ListaMotoristas,Ind):-
-	random_permutation(ListaMotoristas,Ind).
-
-%-------------------------------------------------------
-
-%----------------------
-% AVALIA
-%----------------------
-
-avalia_populacao([],[]):-!.
-avalia_populacao([Ind|Resto],[Ind*V|Resto1]):-
-	avalia(Ind,V),
-	avalia_populacao(Resto,Resto1),!.
-
-avalia(SeqMotoristas,V):-
-
-	% Buscar a sequência de work blocks e gerar agenda temporal
-	vehicle_duty_id(Id),
-	vehicleduty(Id,SeqWorkBlocks),
-	gerar_agenda_temporal(SeqMotoristas,SeqWorkBlocks,[],Agenda),
-	write(Agenda),nl.
-	%//TODO: implementar avaliacao
-
-
-%--------------GERAR AGENDA---------------------
-% Gera uma agenda no formato [ (Motorista, [ (StartTime,EndTime), ... ]), ... ]
-% Lista de tuplos, um tuplo por motorista. Cada tuplo tem o Id do motorista e a lista de workblocks, ordenada.
-
-gerar_agenda_temporal([],[],Agenda,Agenda):-!.
-
-gerar_agenda_temporal(SeqMotoristas,SeqWorkBlockIds,Agenda,Resultado):-
-
-	SeqMotoristas = [Motorista | RestoMotoristas],
-	SeqWorkBlockIds = [WorkBlockId | RestoWorkBlocks],
-	workblock(WorkBlockId,_,StartTime,EndTime),
-
-	(
-		% Se o motorista já tiver workblocks na agenda, faz append deste workblock ao final da lista de workblocks desse motorista
-		(
-			% Procura uma entrada em Agenda com Motorista, se sucesso retorna ListaWorkBlock associado a Motorista
-			member((Motorista,ListaWorkBlock), Agenda),
-			% Append do workblock à lista de workblocks
-			append(ListaWorkBlock, [ (StartTime,EndTime) ], ListaWorkBlockNova),
-			% Concatena work blocks consecutivos na lista de work blocks
-			concatenar_blocos_consecutivos(ListaWorkBlockNova,ListaWorkBlockNovaConcatenada),
-			% Apaga da Agenda a entrada do motorista antiga
-			delete(Agenda,(Motorista,_),TempAgenda),
-			% Adiciona na Agenda a entrada do motorista com a lista de workblocks atualizada
-			append([(Motorista,ListaWorkBlockNovaConcatenada)],TempAgenda,AgendaAtualizada)
-		) ; 
-		% Se o motorista ainda não tiver uma entrada na agenda, então cria uma com o workblock
-		append([ ( Motorista,[ (StartTime,EndTime) ] ) ], Agenda,AgendaAtualizada)
-	),
-
-	% Gera a agenda para os workblocks seguintes e retorna o resultado
-	gerar_agenda_temporal(RestoMotoristas,RestoWorkBlocks, AgendaAtualizada, Resultado).
-
-
-% Para quando tiver uma sublista com apenas um elemento (já não há mais nada para concatenar)
-concatenar_blocos_consecutivos([Bloco],[Bloco]):-!.
-concatenar_blocos_consecutivos(ListaWorkBlock,ListaWorkBlockConcatenada):-
-
-	nth1(1,ListaWorkBlock, (StartTime1,EndTime1) ),
-	nth1(2,ListaWorkBlock, (StartTime2,EndTime2) ),
-
-	% Se o Endtime do primeiro block for igual ao Starttime do segundo, então junta os dois
-	% Passa a lista de workblocks com o novo workblock recursivamente para comparar com os próximos blocos
-	(
-		EndTime1 = StartTime2,
-		% Retira os dois workblocks
-		subtract(ListaWorkBlock, [ (StartTime1,EndTime1), (StartTime2,EndTime2) ], ListaWorkBlockTemp),
-		% Adiciona o workblock concatenado
-		append( [ (StartTime1, EndTime2) ], ListaWorkBlockTemp, ListaWorkBlockNova ),
-		% Passa a lista com o novo bloco para ser concatenada com o resto dos blocos
-		concatenar_blocos_consecutivos(ListaWorkBlockNova, ListaWorkBlockConcatenada)
-	) ;
-	% Se não forem iguais, então passa uma sublista sem o primeiro workblock, e depois faz append do primeiro work block ao resultado
-	ListaWorkBlock = [ PrimeiroWorkBlock | Resto ],
-	concatenar_blocos_consecutivos(Resto, SubListaConcatenada),
-	append([PrimeiroWorkBlock], SubListaConcatenada, ListaWorkBlockConcatenada).
-
-%-----------------------------------------------
-
-%-------------------------------------------------------
-
