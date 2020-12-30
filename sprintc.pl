@@ -67,8 +67,8 @@ horas_contrato(18107,50400,79200). %14h-22h
 
 % parameteriza��o
 geracoes(5).
-populacao(100).
-prob_cruzamento(0.4).
+populacao(10).
+%prob_cruzamento(0.4).
 prob_mutacao(0.5).
 vehicle_duty_id(12).
 
@@ -101,6 +101,7 @@ peso_horario_contrato(8).
 % Carregar outros ficheiros
 :- [gerar_populacao].
 :- [avalia].
+:- [geracao].
 
 gera:-
 	%inicializa,
@@ -108,8 +109,7 @@ gera:-
 	avalia_populacao(Pop,PopAv),
 	ordena_populacao(PopAv,PopOrd),
 	geracoes(NG),
-	%gera_geracao(0,NG,PopOrd).
-	write(PopOrd), nl.
+	gera_geracao(0,NG,PopOrd), !.
 
 
 
