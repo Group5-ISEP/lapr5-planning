@@ -72,6 +72,9 @@ prob_cruzamento(0.4).
 prob_mutacao(0.5).
 vehicle_duty_id(12).
 
+
+
+
 % Restrições
 
 inicio_periodo_almoco(39600).
@@ -93,6 +96,8 @@ peso_minimo_descanso(10).
 peso_horario_pretendido(1).
 peso_horario_contrato(8).
 
+
+
 % Carregar outros ficheiros
 :- [gerar_populacao].
 :- [avalia].
@@ -107,6 +112,8 @@ gera:-
 	write(PopOrd), nl.
 
 
+
+%--------------ORDENA POPULACAO------------------------------
 ordena_populacao(PopAv,PopAvOrd):-
 	bsort(PopAv,PopAvOrd).
 
@@ -123,3 +130,5 @@ btroca([X*VX,Y*VY|L1],[Y*VY|L2]):-
 	btroca([X*VX|L1],L2).
 
 btroca([X|L1],[X|L2]):-btroca(L1,L2).
+
+%----------------------------------------------------------------
