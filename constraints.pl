@@ -145,3 +145,44 @@ ultimo_bloco(EndTime,LimiteSup,V):-
     V is 0.
 
 %-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+
+%-----------------------------HORAS CONTRATUAIS-------------------------------
+
+% Para o primeiro workblock, vê se começa antes da hora contratual e o quão antes vai determinar o valor.
+% Fazer o mesmo para o último workblock, vendo o quão depois da hora.
+
+restricao_horario_contrato(Motorista,ListaWorkBlock,V):-
+
+    horas_contrato(Motorista,LimiteInf,LimiteSup),
+    
+    nth1(1,ListaWorkBlock, (StartTime, _ ) ),
+    primeiro_bloco2(StartTime,LimiteInf,Valor1),
+
+    length(ListaWorkBlock, UltimoIndex),
+    nth1(UltimoIndex,ListaWorkBlock, ( _ , EndTime) ),
+    ultimo_bloco2(EndTime,LimiteSup,Valor2),
+
+    V is Valor1 + Valor2.
+    
+
+primeiro_bloco2(StartTime,LimiteInf,V):-
+    (
+        StartTime < LimiteInf,
+        Diferenca is LimiteInf - StartTime,
+        peso_horario_contrato(Peso),
+        V is Diferenca * Peso
+    ) ; 
+    V is 0.
+
+ultimo_bloco2(EndTime,LimiteSup,V):-
+    (
+        EndTime > LimiteSup,
+        Diferenca is EndTime - LimiteSup,
+        peso_horario_contrato(Peso),
+        V is Diferenca * Peso
+    ) ; 
+    V is 0.
+
+%-------------------------------------------------------------------------------

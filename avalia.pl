@@ -93,7 +93,8 @@ avalia_agenda(Agenda,V):-
     restricao_nao_passar_max_horas_totais(ListaWorkBlock,Resultado2),
     restricao_minimo_descanso(ListaWorkBlock,Resultado3),
     restricao_horario_pretendido(Motorista,ListaWorkBlock,Resultado4),
-    Resultado is Resultado1 + Resultado2 + Resultado3 + Resultado4,
+    restricao_horario_contrato(Motorista,ListaWorkBlock,Resultado5),
+    Resultado is Resultado1 + Resultado2 + Resultado3 + Resultado4 + Resultado5,
 
     % avalia o resto da agenda
     avalia_agenda(Resto, ResultadoResto),

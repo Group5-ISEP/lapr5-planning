@@ -13,5 +13,36 @@ SELECAO
 Torneio - juntar a geracao pai e geracao filho, e fazer random_permutation, e depois torneio de 2 em 2 parecido com o cruzamento.
 
 
+Exemplo bom horario (apenas nao cumpre algumas horas pretedidas, hard constraints cumpre todos (carga horaria, horas almoço, etc.))
+
+9:30
+    |276
+10:45
+    |276
+11:45
+    |5188
+12:45
+    |16690
+13:45
+    |16690
+14:45
+    |5188
+15:45
+    |18107
+16:45
+    |18107
+17:45
+    |18107
+18:45
+    |5188
+19:45
+    |18107
+20:45
+    |18107
+21:45
+    |18107
+21:48
+
+
 
 
