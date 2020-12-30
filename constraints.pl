@@ -186,3 +186,6 @@ ultimo_bloco2(EndTime,LimiteSup,V):-
     V is 0.
 
 %-------------------------------------------------------------------------------
+
+
+%//TODO: RESTRICAO DE HORAS DE ALMOÇO E HORAS DE JANTAR

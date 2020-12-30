@@ -101,7 +101,25 @@ gera:-
 	%inicializa,
 	gera_populacao(Pop),
 	avalia_populacao(Pop,PopAv),
-	%ordena_populacao(PopAv,PopOrd),
+	ordena_populacao(PopAv,PopOrd),
 	geracoes(NG),
 	%gera_geracao(0,NG,PopOrd).
-	write(PopAv), nl.
+	write(PopOrd), nl.
+
+
+ordena_populacao(PopAv,PopAvOrd):-
+	bsort(PopAv,PopAvOrd).
+
+bsort([X],[X]):-!.
+bsort([X|Xs],Ys):-
+	bsort(Xs,Zs),
+	btroca([X|Zs],Ys).
+
+
+btroca([X],[X]):-!.
+
+btroca([X*VX,Y*VY|L1],[Y*VY|L2]):-
+	VX>VY,!,
+	btroca([X*VX|L1],L2).
+
+btroca([X|L1],[X|L2]):-btroca(L1,L2).
