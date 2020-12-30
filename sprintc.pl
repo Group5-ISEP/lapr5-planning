@@ -57,9 +57,9 @@ lista_motoristas_nworkblocks(12,[(276,2),(5188,3),(16690,2),(18107,6)]).
 
 % horas_pretendidas( Motorista, LimiteInf, LimiteSup)
 horas_pretendidas(276,32400,39600). %9h-11h
-horas_pretendidas(5188,39600,64800). %11h-18h
-horas_pretendidas(16690,32400,43200). %9h-12h
-horas_pretendidas(18107,50400,72000). %14h-20h
+horas_pretendidas(5188,39600,72000). %11h-20h
+horas_pretendidas(16690,32400,50400). %9h-15h
+horas_pretendidas(18107,50400,75600). %14h-21h
 
 %-----------------------------------------------------------------------------------------------------------------------
 
@@ -73,10 +73,10 @@ horas_contrato(18107,50400,79200). %14h-22h
 
 
 % parameteriza��o
-geracoes(200).
+geracoes(500).
 populacao(50).
 %prob_cruzamento(0.4).
-prob_mutacao(0.5).
+prob_mutacao(0.8).
 vehicle_duty_id(12).
 
 %-----------------------------------------------------------------------------------------------------------------------
