@@ -9,7 +9,7 @@
 avalia_populacao([],[]):-!.
 avalia_populacao([Ind|Resto],[Ind*V|Resto1]):-
 	avalia(Ind,V),
-	avalia_populacao(Resto,Resto1),!.
+	avalia_populacao(Resto,Resto1).
 
 avalia(SeqMotoristas,V):-
 
