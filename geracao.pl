@@ -11,6 +11,7 @@
 
 :- [cruzamento].
 :- [mutacao].
+:- [selecao].
 
 gera_geracao(G,G,Pop):-!,
 	write('Geração '), write(G), write(':'), nl, write(Pop), nl.
@@ -19,10 +20,10 @@ gera_geracao(N,G,Pop):-
 	cruzamento(Pop,NovaPop),
 	mutacao(NovaPop,NovaPopMutada),
 	avalia_populacao(NovaPopMutada,NPopAv),
-	ordena_populacao(NPopAv,NPopOrd),
-    %selecao_torneio(Pop,NPopOrd, Selecao) //TODO: implementar selecao
+    selecao_torneio(Pop,NPopAv, Selecao),
+	ordena_populacao(Selecao,SelecaoOrd),
 	N1 is N+1,
-	gera_geracao(N1,G,NPopOrd).
+	gera_geracao(N1,G,SelecaoOrd).
 
 %-----------------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------------
