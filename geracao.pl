@@ -20,7 +20,7 @@ gera_geracao(N,G,Pop):-
 	cruzamento(Pop,NovaPop),
 	mutacao(NovaPop,NovaPopMutada),
 	avalia_populacao(NovaPopMutada,NPopAv),
-    selecao_torneio(Pop,NPopAv, Selecao),
+    selecao_passa_os_n_melhores(Pop,NPopAv, Selecao),
 	ordena_populacao(Selecao,SelecaoOrd),
 	N1 is N+1,
 	gera_geracao(N1,G,SelecaoOrd).

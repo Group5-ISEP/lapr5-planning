@@ -41,24 +41,35 @@ torneio(Concorrentes, [ Vencedor*V | Selecao ]):-
 %-----------------------------------------------------------------------------------------------------------------------
 %-------------------------------PASSAM OS N MELHOR DA GERAÇÃO ANTIGA----------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------------
-% O melhor da geração antiga é escolhido, e 1 dos da geração nova é removido aleatoriamente.
+% As duas geracoes sao juntas, depois são escolhidos os N melhores. Os restantes são escolhidos aleatoriamente
+% do conjunto.
 %-----------------------------------------------------------------------------------------------------------------------
 
 n_melhores(10).
 
-selecao_passa_o_melhor(PopOrd,NovaPop, Selecao):-
-    n_melhores(N),
-    extrair_seccao(PopOrd,1,N, Melhores),
+selecao_passa_os_n_melhores(PopOrd,NovaPop, Selecao):-
 
-    random_permutation(NovaPop, Randomized),
-    length(Randomized, Length),
+    % Junta as populaçoes, remove os repetidos, e ordena a lista filtrada.
+    append(PopOrd,NovaPop,TudoJunto),
+    remover_repetidos(TudoJunto,TudoJuntoSemRepetidos),
+    ordena_populacao(TudoJuntoSemRepetidos,TudoJuntoOrdenado),
+
+    % Extrai os N melhores
+    n_melhores(N),
+    extrair_seccao(TudoJuntoOrdenado,1,N, Melhores),
+
+    % Busca a quantidade restante aleatoriamente
+    populacao(MaxPopulacao),
+    random_permutation(TudoJunto, Randomized),
     N2 is N+1,
-    extrair_seccao(Randomized,N2,Length, Resto),
+    extrair_seccao(Randomized,N2,MaxPopulacao, Resto),
+
+    %Junta os melhores com os restantes.
     append( Melhores, Resto, Selecao ).
 
-n_melhores(0,[],[]):-!.
-n_melhores(N, [ Melhor | Resto], [ Melhor | Melhores ]):-
-    N1 is N-1,
-    n_melhores(N1,Resto,Melhores).
+remover_repetidos([],[]):-!.
+remover_repetidos([Elemento | Resto], [Elemento | Result]):-
+    delete(Resto, Elemento, RestoFiltrado),
+    remover_repetidos(RestoFiltrado, Result).
 %-----------------------------------------------------------------------------------------------------------------------
 %-----------------------------------------------------------------------------------------------------------------------
