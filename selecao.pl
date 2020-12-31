@@ -45,7 +45,7 @@ torneio(Concorrentes, [ Vencedor*V | Selecao ]):-
 % do conjunto.
 %-----------------------------------------------------------------------------------------------------------------------
 
-n_melhores(10).
+percent_n_melhores(10).
 
 selecao_passa_os_n_melhores(PopOrd,NovaPop, Selecao):-
 
@@ -55,11 +55,12 @@ selecao_passa_os_n_melhores(PopOrd,NovaPop, Selecao):-
     ordena_populacao(TudoJuntoSemRepetidos,TudoJuntoOrdenado),
 
     % Extrai os N melhores
-    n_melhores(N),
+    populacao(MaxPopulacao),
+    percent_n_melhores(P),
+    N is div( (P*MaxPopulacao), 100 ),
     extrair_seccao(TudoJuntoOrdenado,1,N, Melhores),
 
     % Busca a quantidade restante aleatoriamente
-    populacao(MaxPopulacao),
     random_permutation(TudoJunto, Randomized),
     N2 is N+1,
     extrair_seccao(Randomized,N2,MaxPopulacao, Resto),
