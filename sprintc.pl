@@ -75,7 +75,7 @@ horas_contrato(18107,50400,79200). %14h-22h
 % parameteriza��o
 geracoes(500).
 populacao(50).
-%prob_cruzamento(0.4).
+prob_cruzamento(1).
 prob_mutacao(0.8).
 vehicle_duty_id(12).
 

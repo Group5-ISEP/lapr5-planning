@@ -15,9 +15,16 @@ cruzamento1([Ind*_],[Ind]).
 cruzamento1([Ind1*_,Ind2*_|Resto],[NInd1,NInd2|Resto1]):-
 
 	gerar_pontos_cruzamento(P1,P2),
-    % Cruza para ambos os lados, 1 com 2 e 2 com 1.
-    cruzar(Ind1,Ind2,P1,P2,NInd1),
-	cruzar(Ind2,Ind1,P1,P2,NInd2),
+
+    prob_cruzamento(Pcruz),
+    random(0.0,1.0,Pc),
+	((Pc =< Pcruz,!,
+        % Cruza para ambos os lados, 1 com 2 e 2 com 1.
+        cruzar(Ind1,Ind2,P1,P2,NInd1),
+	    cruzar(Ind2,Ind1,P1,P2,NInd2))
+	;
+	    (NInd1=Ind1,NInd2=Ind2)
+    ),
 	% Cruza os restantes individuos
 	cruzamento1(Resto,Resto1).
 
