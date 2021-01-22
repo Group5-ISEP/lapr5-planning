@@ -36,13 +36,9 @@ menor([H|T],Hmenor):-menor(T,L1),length(H,C),length(L1,C1),
 
 :- dynamic melhor_sol_tempo/2.
 
-plan_mud_mot_tempo(TempoI,Noi,Nof,LCaminho_menostempo):-
-    get_time(Ti),
+caminho_menor_tempo(TempoI,Noi,Nof,LCaminho_menostempo,Duracao):-
     (melhor_caminho(TempoI,Noi,Nof);true),
-    retract(melhor_sol_tempo(LCaminho_menostempo,_)),
-    get_time(Tf),
-    TSol is Tf-Ti,
-    write('Tempo de geracao da solucao:'),write(TSol),nl.
+    retract(melhor_sol_tempo(LCaminho_menostempo,Duracao)),
 melhor_caminho(TempoI,Noi,Nof):-
     asserta(melhor_sol_tempo(_,1000000)),
     caminho(Noi,Nof,LCaminho),
