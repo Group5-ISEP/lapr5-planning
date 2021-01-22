@@ -45,7 +45,7 @@ torneio(Concorrentes, [ Vencedor*V | Selecao ]):-
 % do conjunto.
 %-----------------------------------------------------------------------------------------------------------------------
 
-percent_n_melhores(10).
+percent_n_melhores(30).
 
 selecao_passa_os_n_melhores(PopOrd,NovaPop, Selecao):-
 

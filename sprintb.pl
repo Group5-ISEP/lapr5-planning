@@ -38,7 +38,7 @@ menor([H|T],Hmenor):-menor(T,L1),length(H,C),length(L1,C1),
 
 caminho_menor_tempo(TempoI,Noi,Nof,LCaminho_menostempo,Duracao):-
     (melhor_caminho(TempoI,Noi,Nof);true),
-    retract(melhor_sol_tempo(LCaminho_menostempo,Duracao)),
+    retract(melhor_sol_tempo(LCaminho_menostempo,Duracao)).
 melhor_caminho(TempoI,Noi,Nof):-
     asserta(melhor_sol_tempo(_,1000000)),
     caminho(Noi,Nof,LCaminho),
