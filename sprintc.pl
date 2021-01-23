@@ -30,7 +30,8 @@ geracoes(100).
 populacao(100).
 prob_cruzamento(0.8).
 prob_mutacao(0.2).
-vehicle_duty_id(12).
+
+:- dynamic vehicle_duty_id/1.
 
 %-----------------------------------------------------------------------------------------------------------------------
 
@@ -65,8 +66,10 @@ peso_horario_contrato(8).
 :- [geracao].
 :- [utils].
 
-gera:-
+gera(VehicleDuty):-
 	%inicializa,
+	(retract(vehicle_duty_id(_));true),
+	asserta(vehicle_duty_id(VehicleDuty)),
 	gera_populacao(Pop),
 	avalia_populacao(Pop,PopAv),
 	ordena_populacao(PopAv,PopOrd),
