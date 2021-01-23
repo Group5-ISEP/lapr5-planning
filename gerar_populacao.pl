@@ -32,10 +32,13 @@ gera_populacao(TamPop,ListaMotoristas,[Ind|Resto]):-
 	TamPop1 is TamPop-1,
 	%Gera os outros indiviuos
 	gera_populacao(TamPop1,ListaMotoristas,Resto),
-	%Gera um individuo
+	gera_individuo(ListaMotoristas,Resto,Ind).
+
+% Gera um individuo
+gera_individuo(ListaMotoristas,Resto,Ind):-
 	random_permutation(ListaMotoristas,Ind),
 	not(member(Ind,Resto)).
 % Caso a função falhe tenta outra vez
-gera_populacao(TamPop,ListaMotoristas,L):-
-	gera_populacao(TamPop,ListaMotoristas,L).
+gera_individuo(ListaMotoristas,Resto,Ind):-
+	gera_individuo(ListaMotoristas,Resto,Ind).
 %-------------------------------------------------------
