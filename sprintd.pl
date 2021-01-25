@@ -3,6 +3,7 @@
 :-[sprintc].
 :-[sprintD/gerar_motoristas_workblock].
 :-[sprintD/gerar_agenda_drivers].
+:-[sprintD/retirar_erros].
 :-[conhecimento].
 
 
@@ -21,8 +22,8 @@ reset_motoristas():-
 calcLen((K,List),(N,K,List)):- length(List,N).
 delLen((_,K,List),(K,List)).
 
-sortlen(List,Sorted):- 
-  maplist(calcLen,List,List1), 
+sortlen(List,Sorted):-
+  maplist(calcLen,List,List1),
   sort(0,@>=,List1, List2),
   maplist(delLen,List2,Sorted).
 
@@ -36,7 +37,10 @@ atribuir_motoristas():-
 
     gerar_agenda_drivers(Agenda),
     sortlen(Agenda,AgendaSorted),
-    write(AgendaSorted), nl.
+    write(AgendaSorted), nl, nl,
+
+    retirar_erros(AgendaSorted, AgendaLimpa, ListaReatribuicao),
+    write(AgendaLimpa),nl,nl,write(ListaReatribuicao),nl.
 
 
 
