@@ -1,7 +1,9 @@
 
 :-[sprintb].
 :-[sprintc].
-:-[gerar_motoristas_workblock].
+:-[sprintD/gerar_motoristas_workblock].
+:-[sprintD/gerar_agenda_drivers].
+:-[conhecimento].
 
 
 reset_motoristas():-
@@ -14,10 +16,29 @@ reset_motoristas():-
         _
     ).
 
+%----------------------------------------------------------------------------------
+%--Sort Agenda por Maior numero de workblocks para o menor
+calcLen((K,List),(N,K,List)):- length(List,N).
+delLen((_,K,List),(K,List)).
+
+sortlen(List,Sorted):- 
+  maplist(calcLen,List,List1), 
+  sort(0,@>=,List1, List2),
+  maplist(delLen,List2,Sorted).
+
+%---------------------------------------------------------------------------------
+
 atribuir_motoristas():-
     gera_ligacoes,
     gerar_n_motoristas_workblock(),
 
-    findall(_, (vehicleduty(Id,_), gera(Id)),_ ).
+    findall(_, (vehicleduty(Id,_), gera(Id)),_ ),
+
+    gerar_agenda_drivers(Agenda),
+    sortlen(Agenda,AgendaSorted),
+    write(AgendaSorted), nl.
+
+
+
 
 

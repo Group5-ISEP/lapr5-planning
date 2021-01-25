@@ -61,10 +61,10 @@ peso_horario_contrato(8).
 
 % Carregar outros ficheiros
 :-[conhecimento].
-:- [gerar_populacao].
-:- [avalia].
-:- [geracao].
-:- [utils].
+:- [sprintC/gerar_populacao].
+:- [sprintC/avalia].
+:- [sprintC/geracao].
+:- [sprintC/utils].
 
 gera(VehicleDuty):-
 	%inicializa,
