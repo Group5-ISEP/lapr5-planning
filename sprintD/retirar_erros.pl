@@ -115,6 +115,53 @@ oito_horas1(Workblocks,Retirados, ResultadoFicaram, ResultadoRetirados ):-
 
 %----------------------------------------------------------------------------
 
+horas_consecutivas([],[],[]).
+horas_consecutivas(Workblocks, Ficaram, Retirados):-
+    horas_consecutivas1(Workblocks,[],Ficaram,Retirados).
+
+horas_consecutivas1([Workblock],Retirados,[Workblock],Retirados).
+horas_consecutivas1(Workblocks,Retirados, ResultadoFicaram, ResultadoRetirados ):-
+    maplist(extract_period,Workblocks,PeriodList),
+    concatenar_blocos_consecutivos(PeriodList,PeriodListConcatenada),
+    restricao_nao_passar_max_horas_consecutivas(PeriodListConcatenada,Result),
+
+    (
+        (
+            Result>0,
+            retirar_maior(Workblocks,WorkblocksSemMaior,MaiorWorkblock),
+            horas_consecutivas1(WorkblocksSemMaior, [MaiorWorkblock | Retirados], ResultadoFicaram,ResultadoRetirados)
+        )
+        ;
+        ResultadoFicaram = Workblocks,
+        ResultadoRetirados = Retirados
+    ).
+
+%-------------------------------------------------------------------------------
+
+tempo_descanso([],[],[]).
+tempo_descanso(Workblocks, Ficaram, Retirados):-
+    tempo_descanso1(Workblocks,[],Ficaram,Retirados).
+
+tempo_descanso1([Workblock],Retirados,[Workblock],Retirados).
+tempo_descanso1(Workblocks,Retirados, ResultadoFicaram, ResultadoRetirados ):-
+    maplist(extract_period,Workblocks,PeriodList),
+    concatenar_blocos_consecutivos(PeriodList,PeriodListConcatenada),
+    restricao_nao_passar_max_horas_consecutivas(PeriodListConcatenada,Result),
+
+    (
+        (
+            Result>0,
+            retirar_maior(Workblocks,WorkblocksSemMaior,MaiorWorkblock),
+            tempo_descanso1(WorkblocksSemMaior, [MaiorWorkblock | Retirados], ResultadoFicaram,ResultadoRetirados)
+        )
+        ;
+        ResultadoFicaram = Workblocks,
+        ResultadoRetirados = Retirados
+    ).
+
+
+%-------------------------------------------------------------------------------
+
 %Mapping para as restrições
 extract_period((_,_,StartTime,EndTime),(StartTime,EndTime)).
 %--------------------------------------------------------------
