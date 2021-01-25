@@ -40,7 +40,11 @@ atribuir_motoristas():-
     write(AgendaSorted), nl, nl,
 
     retirar_erros(AgendaSorted, AgendaLimpa, ListaReatribuicao),
-    write(AgendaLimpa),nl,nl,write(ListaReatribuicao),nl.
+    write('================'),nl,nl,
+    write('AgendaLimpa'),nl,
+    write(AgendaLimpa),nl,nl,
+    write('Retirados'),nl,
+    write(ListaReatribuicao),nl.
 
 
 

@@ -1,3 +1,5 @@
+
+retirar_erros([],[],[]):-!.
 retirar_erros(Agenda, AgendaLimpa, ListaReatribuicao):-
 
     Agenda = [ (Motorista,Workblocks) | Outros ],
@@ -5,10 +7,22 @@ retirar_erros(Agenda, AgendaLimpa, ListaReatribuicao):-
     sobreposicao(Workblocks, Workblocks1, Retirados1),
     deslocacao(Workblocks1, Workblocks2, Retirados2),
     oito_horas(Workblocks2, Workblocks3, Retirados3),
-    %quatro_horas_consec(Workblocks3, Workblocks4, Retirados4),
-    %uma_hora_repouso(Workblocks4, Workblocks5, Retirados5),
-    write(Workblocks2),nl,
-    write(Retirados2), nl.
+    horas_consecutivas(Workblocks3, Workblocks4, Retirados4),
+    tempo_descanso(Workblocks4, Workblocks5, Retirados5),
+
+    %Junta todos os blocos retirados
+    append(Retirados1,Retirados2,Temp1),
+    append(Temp1,Retirados3,Temp2),
+    append(Temp2,Retirados4,Temp3),
+    append(Temp3,Retirados5, TodosRetirados),
+    write('================'),nl,
+    write(Workblocks5),nl,
+    write(TodosRetirados), nl,
+
+    retirar_erros(Outros,AgendaLimpa1,ListaReatribuicao1),
+
+    append([(Motorista,Workblocks5)], AgendaLimpa1, AgendaLimpa),
+    append(TodosRetirados,ListaReatribuicao1, ListaReatribuicao).
 
 
 
