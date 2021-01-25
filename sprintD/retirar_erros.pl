@@ -4,7 +4,7 @@ retirar_erros(Agenda, AgendaLimpa, ListaReatribuicao):-
 
     sobreposicao(Workblocks, Workblocks1, Retirados1),
     deslocacao(Workblocks1, Workblocks2, Retirados2),
-    %oito_horas(Workblocks2, Workblocks3, Retirados3),
+    oito_horas(Workblocks2, Workblocks3, Retirados3),
     %quatro_horas_consec(Workblocks3, Workblocks4, Retirados4),
     %uma_hora_repouso(Workblocks4, Workblocks5, Retirados5),
     write(Workblocks2),nl,
@@ -90,3 +90,53 @@ deslocacao(Workblocks, Ficaram, Retirados):-
 get_last(List, Last):-
     length(List,N),
     nth1(N,List,Last).
+
+%-------------------------------------------------------------------------------
+
+oito_horas([],[],[]).
+oito_horas(Workblocks, Ficaram, Retirados):-
+    oito_horas1(Workblocks,[],Ficaram,Retirados).
+
+oito_horas1([Workblock],Retirados,[Workblock],Retirados).
+oito_horas1(Workblocks,Retirados, ResultadoFicaram, ResultadoRetirados ):-
+    maplist(extract_period,Workblocks,PeriodList),
+    restricao_nao_passar_max_horas_totais(PeriodList,Result),
+
+    (
+        (
+            Result>0,
+            retirar_maior(Workblocks,WorkblocksSemMaior,MaiorWorkblock),
+            oito_horas1(WorkblocksSemMaior, [MaiorWorkblock | Retirados], ResultadoFicaram,ResultadoRetirados)
+        )
+        ;
+        ResultadoFicaram = Workblocks,
+        ResultadoRetirados = Retirados
+    ).
+
+%----------------------------------------------------------------------------
+
+%Mapping para as restrições
+extract_period((_,_,StartTime,EndTime),(StartTime,EndTime)).
+%--------------------------------------------------------------
+
+%Retira o maior workblock da lista
+retirar_maior(Workblocks,Ficam,MaiorWorkblock):-
+    Workblocks = [Workblock | Resto],
+    maior1(Workblocks, Workblock, MaiorWorkblock),
+    subtract_once(Workblocks, [MaiorWorkblock], Ficam).
+
+maior1([],Maior,Maior).
+maior1([WorkBlock | Resto],Temp,Maior):-
+    WorkBlock = (_,_,StartTime,EndTime),
+    Temp = (_,_,StartTime2,EndTime2),
+
+    Duration1 = EndTime-StartTime,
+    Duration2 = EndTime2-StartTime2,
+
+    (
+        (Duration1>Duration2, maior1(Resto,WorkBlock,Maior))
+        ;
+        maior1(Resto,Temp,Maior)
+    ).
+
+%-----------------------------------------------------------------------------------
