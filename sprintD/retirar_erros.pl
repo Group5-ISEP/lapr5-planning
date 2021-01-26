@@ -16,8 +16,11 @@ retirar_erros(Agenda, AgendaLimpa, ListaReatribuicao):-
     append(Temp2,Retirados4,Temp3),
     append(Temp3,Retirados5, TodosRetirados),
     write('================'),nl,
+    write('Lista Workblocks do Motorista Limpa'),nl,
     write(Workblocks5),nl,
+    write('Retirados deste Motorista'),nl,
     write(TodosRetirados), nl,
+    write('================'),nl,
 
     retirar_erros(Outros,AgendaLimpa1,ListaReatribuicao1),
 

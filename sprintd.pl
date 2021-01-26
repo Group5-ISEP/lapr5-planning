@@ -4,6 +4,7 @@
 :-[sprintD/gerar_motoristas_workblock].
 :-[sprintD/gerar_agenda_drivers].
 :-[sprintD/retirar_erros].
+:-[sprintD/reatribuir].
 :-[conhecimento].
 
 
@@ -30,6 +31,8 @@ sortlen(List,Sorted):-
 %---------------------------------------------------------------------------------
 
 atribuir_motoristas():-
+
+    reset_motoristas,
     gera_ligacoes,
     gerar_n_motoristas_workblock(),
 
@@ -44,7 +47,12 @@ atribuir_motoristas():-
     write('AgendaLimpa'),nl,
     write(AgendaLimpa),nl,nl,
     write('Retirados'),nl,
-    write(ListaReatribuicao),nl.
+    write(ListaReatribuicao),nl,
+    write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'),nl,
+    write('REATRIBUIR'),nl,
+    reatribuir(AgendaLimpa,ListaReatribuicao,AgendaFinal),
+    write('AGENDA FINAL'),nl,
+    write(AgendaFinal),nl, !.
 
 
 
