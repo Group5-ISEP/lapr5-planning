@@ -52,9 +52,24 @@ atribuir_motoristas():-
     write('REATRIBUIR'),nl,
     reatribuir(AgendaLimpa,ListaReatribuicao,AgendaFinal),
     write('AGENDA FINAL'),nl,
-    write(AgendaFinal),nl, !.
+    write(AgendaFinal),nl,nl,
+
+    write('DRIVER DUTIES'),nl,write('============================='),nl,
+
+    traduzir_agenda_para_motoristas(AgendaFinal), !.
 
 
 
+traduzir_agenda_para_motoristas([]).
+traduzir_agenda_para_motoristas(AgendaFinal):-
+    AgendaFinal = [ (Motorista, ListaWorkBlocks) | Outros],
+    retract(motorista(Motorista,_)),
+    maplist(workblock_para_id,ListaWorkBlocks,ListaIds),
+    asserta(motorista(Motorista,ListaIds)),
+    write(Motorista),write('::'),write(ListaIds),nl,
+
+    traduzir_agenda_para_motoristas(Outros).
+
+workblock_para_id((_,Workblock,_,_),Workblock).
 
 
